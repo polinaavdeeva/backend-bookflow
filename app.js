@@ -16,7 +16,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/bookflowdb")
+  .connect(
+    "mongodb+srv://polinaavdeeva:bookflow123.@bookflow.wx21ipq.mongodb.net/bookflowdb?retryWrites=true&w=majority&appName=BookFlow"
+  )
   .then(() => {
     console.log("Бд подключена");
   })
