@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const usersRouter = require("./user");
+const booksRouter = require("./book");
 const { auth } = require("../middlewares/auth");
 const NotFoundError = require("../errors/NotFoundError");
 const { createUser } = require("../controllers/signUp");
@@ -15,6 +16,7 @@ router.post("/signin", login, validateUserAuthentication);
 router.use(auth);
 
 router.use("/users", usersRouter);
+router.use("/books", booksRouter);
 
 router.use("*", () => {
   throw new NotFoundError("Ресурс не найден.");
