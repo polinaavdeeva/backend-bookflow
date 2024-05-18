@@ -11,7 +11,7 @@ const {
   validateBook,
 } = require("../middlewares/bookValidation");
 
-//router.get("/", getBooks);
+router.get("/", getBooks);
 router.post("/", validateBook, createBook);
 router.delete("/:bookId", validateDeleteBook, deleteBook);
 

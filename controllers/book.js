@@ -9,6 +9,12 @@ const ForbiddenError = require("../errors/ForbiddenError");
 //     .catch(next);
 // };
 
+module.exports.getBooks = (req, res, next) => {
+  Book.find({})
+    .then((books) => res.status(200).send(books))
+    .catch(next);
+};
+
 module.exports.deleteBook = (req, res, next) => {
   Book.findById(req.params.bookId)
     .then((book) => {
@@ -37,19 +43,19 @@ module.exports.createBook = (req, res, next) => {
     author,
     rating,
     postingDate,
-    bookId,
+    // bookId,
   } = req.body;
 
   const owner = req.user._id;
 
-  Movie.create({
+  Book.create({
     name,
     description,
     image,
     author,
     rating,
     postingDate,
-    bookId,
+    // bookId,
   })
     .then((book) => res.status(200).send(book))
     .catch((err) => {

@@ -15,10 +15,10 @@ const bookSchema = new mongoose.Schema({
     image: {
         type: String,
         required: true,
-        validate: {
-            validator: (value) => validator.isURL(value),
-            message: 'Некорректная ссылка',
-        },
+        // validate: {
+        //     validator: (value) => validator.isURL(value),
+        //     message: 'Некорректная ссылка',
+        // },
     },
     author: {
         type: String,
@@ -34,11 +34,11 @@ const bookSchema = new mongoose.Schema({
     postingDate:{
         type: String,
         required: true,
-    },
-    bookId:{
-        type: Number,
-        required: true,
     }
+    // bookId:{
+    //     type: Number,
+    //     required: true,
+    // }
 });
 
 module.exports = mongoose.model("book", bookSchema);
