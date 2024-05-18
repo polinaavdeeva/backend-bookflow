@@ -4,6 +4,7 @@ const {
   getBooks,
   createBook,
   deleteBook,
+  searchBooks,
 } = require("../controllers/book");
 
 const {
@@ -12,6 +13,7 @@ const {
 } = require("../middlewares/bookValidation");
 
 router.get("/", getBooks);
+router.get("/search", searchBooks);
 router.post("/", validateBook, createBook);
 router.delete("/:bookId", validateDeleteBook, deleteBook);
 

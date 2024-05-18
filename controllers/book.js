@@ -15,6 +15,19 @@ module.exports.getBooks = (req, res, next) => {
     .catch(next);
 };
 
+module.exports.searchBooks = (req, res, next) => {
+  const { name } = req.query;
+  let query = {};
+
+  if (name) {
+    query.name = { $regex: name, $options: 'i' };
+  }
+
+  Book.find(query)
+    .then((books) => res.status(200).send(books))
+    .catch(next);
+};
+
 module.exports.deleteBook = (req, res, next) => {
   Book.findById(req.params.bookId)
     .then((book) => {
