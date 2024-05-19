@@ -10,6 +10,18 @@ const userSchema = new mongoose.Schema({
     minlength: 2,
     maxlength: 30,
   },
+  lastName: {
+    type: String,
+    required: true,
+    minlength: 2,
+    maxlength: 30,
+  },
+  patronymic: {
+    type: String,
+    required: false,
+    minlength: 2,
+    maxlength: 30,
+  },
   email: {
     type: String,
     unique: true,
@@ -19,15 +31,9 @@ const userSchema = new mongoose.Schema({
       message: "Некорректный адрес электронной почты",
     },
   },
-  city: {
-    type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 30,
-  },
   gender: {
     type: String,
-    enum: ["Мужской", "Женский", "Другой"],
+    enum: ["Мужской", "Женский"],
     required: true,
   },
   dateOfBirth: {

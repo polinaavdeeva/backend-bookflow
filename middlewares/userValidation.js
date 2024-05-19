@@ -4,9 +4,10 @@ const { dateRegex } = require("../utils/constants");
 const validateUserInfo = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
+    lastName: Joi.string().min(2).max(30),
+    patronymic: Joi.string().min(2).max(30),
     email: Joi.string().required().email(),
-    city: Joi.string().required().min(2).max(30),
-    dateOfBirth: Joi.string().required().pattern(dateRegex),
+    dateOfBirth: Joi.string().required(),
     gender: Joi.string().required(),
     password: Joi.string().required().min(6),
   }),
@@ -23,8 +24,9 @@ const validateUserUpdate = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     email: Joi.string().required().email(),
-    city: Joi.string().required().min(2).max(30),
-    dateOfBirth: Joi.string().required().pattern(dateRegex),
+    lastName: Joi.string().min(2).max(30),
+    patronymic: Joi.string().min(2).max(30),
+    dateOfBirth: Joi.string().required(),
     gender: Joi.string().required(),
   }),
 });

@@ -4,11 +4,11 @@ const BadRequestError = require("../errors/BadRequestError");
 const { ConflictError } = require("../errors/ConflictError");
 
 module.exports.updateUserInfo = (req, res, next) => {
-  const { email, name, dateOfBirth, gender, city } = req.body;
+  const { email, name, dateOfBirth, gender, lastName, patronymic } = req.body;
 
   User.findByIdAndUpdate(
     req.user._id,
-    { email, name, dateOfBirth, gender, city },
+    { email, name, dateOfBirth, gender, lastName, patronymic },
     { new: true, runValidators: true }
   )
     .then((user) => {
