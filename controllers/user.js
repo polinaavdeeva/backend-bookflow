@@ -5,7 +5,8 @@ const BadRequestError = require("../errors/BadRequestError");
 const { ConflictError } = require("../errors/ConflictError");
 
 module.exports.updateUserInfo = (req, res, next) => {
-  const { email, name, dateOfBirth, gender, lastName, patronymic } = req.body;
+  const { email, name, dateOfBirth, gender, lastName, patronymic, rating } =
+    req.body;
 
   User.findByIdAndUpdate(
     req.user._id,
@@ -95,6 +96,50 @@ exports.uploadAvatar = async (req, res) => {
     }
   } catch (err) {
     res.status(500).send(err);
+  }
+};
+
+exports.addRating = async (req, res) => {
+  const { userId } = req.params;
+  const { rating } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "Пользователь не найден" });
+    }
+
+    user.ratings.push(rating);
+
+    const totalRating = user.ratings.reduce((acc, curr) => acc + curr, 0);
+    user.rating = parseFloat((totalRating / user.ratings.length).toFixed(2));
+
+    await user.save();
+
+    res.status(200).json({ message: "Оценка успешно добавлена", user });
+  } catch (error) {
+    console.error("Ошибка при добавлении оценки:", error);
+    res.status(500).json({ message: "Произошла ошибка при добавлении оценки" });
+  }
+};
+
+exports.getAverageRating = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "Пользователь не найден" });
+    }
+
+    res.status(200).json({ rating: user.rating });
+  } catch (error) {
+    console.error("Ошибка при получении среднего рейтинга:", error);
+    res
+      .status(500)
+      .json({ message: "Произошла ошибка при получении среднего рейтинга" });
   }
 };
 

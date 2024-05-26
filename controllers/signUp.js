@@ -13,6 +13,7 @@ module.exports.createUser = (req, res, next) => {
     gender,
     dateOfBirth,
     registrationDate,
+    rating,
   } = req.body;
 
   bcrypt
@@ -27,6 +28,7 @@ module.exports.createUser = (req, res, next) => {
         gender,
         dateOfBirth,
         registrationDate,
+        rating,
       })
     )
     .then((user) => {
@@ -39,6 +41,7 @@ module.exports.createUser = (req, res, next) => {
         gender,
         dateOfBirth,
         registrationDate,
+        rating,
         _id,
       });
     })
