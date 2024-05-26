@@ -4,8 +4,16 @@ const BadRequestError = require("../errors/BadRequestError");
 const { ConflictError } = require("../errors/ConflictError");
 
 module.exports.createUser = (req, res, next) => {
-  const { name, password, email, lastName, patronymic, gender, dateOfBirth } =
-    req.body;
+  const {
+    name,
+    password,
+    email,
+    lastName,
+    patronymic,
+    gender,
+    dateOfBirth,
+    registrationDate,
+  } = req.body;
 
   bcrypt
     .hash(password, 10)
@@ -18,6 +26,7 @@ module.exports.createUser = (req, res, next) => {
         patronymic,
         gender,
         dateOfBirth,
+        registrationDate,
       })
     )
     .then((user) => {
@@ -29,6 +38,7 @@ module.exports.createUser = (req, res, next) => {
         patronymic,
         gender,
         dateOfBirth,
+        registrationDate,
         _id,
       });
     })

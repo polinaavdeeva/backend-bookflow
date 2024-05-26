@@ -7,6 +7,8 @@ const cors = require("cors");
 const router = require("./routes/index");
 const { handleError } = require("./middlewares/errorsHandler");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
+const path = require("path");
+const fileUpload = require("express-fileupload");
 
 const { PORT = 4000 } = process.env;
 
@@ -27,6 +29,12 @@ mongoose
   });
 
 app.use(cors());
+
+app.use(
+  fileUpload({
+    createParentPath: true,
+  })
+);
 
 app.use(requestLogger);
 app.use(router);
