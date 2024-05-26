@@ -22,6 +22,11 @@ const userSchema = new mongoose.Schema({
     minlength: 2,
     maxlength: 30,
   },
+  avatar: {
+    type: String,
+    data: Buffer,
+    contentType: String,
+  },
   email: {
     type: String,
     unique: true,
@@ -30,6 +35,10 @@ const userSchema = new mongoose.Schema({
       validator: (value) => validator.isEmail(value),
       message: "Некорректный адрес электронной почты",
     },
+  },
+  registrationDate: {
+    type: Date,
+    required: true,
   },
   gender: {
     type: String,
