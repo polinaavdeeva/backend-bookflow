@@ -54,6 +54,17 @@ const userSchema = new mongoose.Schema({
     required: true,
     select: false,
   },
+  rating: {
+    type: Number,
+    default: 0,
+  },
+  ratings: [
+    {
+      type: Number,
+      min: 1,
+      max: 5,
+    },
+  ],
 });
 
 userSchema.statics.findUserByCredentials = function (email, password) {
