@@ -40,7 +40,7 @@ router.post("/signin", login, validateUserAuthentication);
 router.get("/books", getBooks);
 router.get("/books/image", getBookImage)
 router.get("/books/search", searchBooks);
-router.get("/books/:id", getBookById)
+router.get("/booksbyid/:id", getBookById)
 router.get("/comments/book/:bookId", getCommentsByBook);
 router.post("/books/image", uploadImage)
 
@@ -51,8 +51,8 @@ router.use("/users", usersRouter);
 router.post("/books", validateBook, createBook);
 
 //router.use("/books", booksRouter);
-router.get("books/:ownerId", getBooksByOwner);
-router.delete("books/:bookId", validateDeleteBook, deleteBook);
+router.get("/books/:ownerId", getBooksByOwner);
+router.delete("/books/:bookId", validateDeleteBook, deleteBook);
 router.use("/comments", commentRouter);
 
 router.use("*", () => {
