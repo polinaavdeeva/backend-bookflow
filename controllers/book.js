@@ -1,6 +1,7 @@
 const Book = require("../models/book");
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
+const path = require("path");
 const ForbiddenError = require("../errors/ForbiddenError");
 
 // module.exports.getBooks = (req, res, next) => {
@@ -28,6 +29,62 @@ module.exports.searchBooks = (req, res, next) => {
     .catch(next);
 };
 
+exports.getBookImage = async (req, res) => {
+  try {
+    const {bookId} = req.query;
+   
+    const book = await Book.findById(bookId);
+
+    if (!book || !book.image) {
+      return res.status(404).json({ message: "Обложка книги не найдена" });
+    }
+
+    const imagePath = path.join(__dirname, "../uploads", book.image);
+
+    res.sendFile(imagePath);
+  } catch (error) {
+    console.error("Ошибка при получении обложки книги:", error);
+    res.status(500).json({
+      message: "Произошла ошибка при получении обложки книги",
+    });
+  }
+};
+
+exports.uploadImage = async (req, res) => {
+  try {
+    if (!req.files) {
+      res.send({
+        status: false,
+        message: "Файл не загружен",
+      });
+    } else {
+      let image = req.files.image;
+      const bookId = req.body._id;
+
+      image.mv(`./uploads/${bookId}-${image.name}`);
+
+      const book = await Book.findByIdAndUpdate(
+        bookId,
+        { image: `${bookId}-${image.name}` },
+        { new: true }
+      );
+
+      res.send({
+        status: true,
+        message: "Файл загружен",
+        data: {
+          book: book.image,
+          name: bookId,
+          mimetype: image.mimetype,
+          size: image.size,
+        },
+      });
+    }
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
+
 module.exports.deleteBook = (req, res, next) => {
   Book.findById(req.params.bookId)
     .then((book) => {
@@ -53,14 +110,13 @@ module.exports.deleteBook = (req, res, next) => {
 };
 
 module.exports.createBook = (req, res, next) => {
-  const { name, description, image, author, rating, postingDate } = req.body;
+  const { name, description, author, rating, postingDate } = req.body;
 
   const owner = req.user._id;
 
   Book.create({
     name,
     description,
-    image,
     author,
     rating,
     postingDate,

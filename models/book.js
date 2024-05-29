@@ -15,7 +15,8 @@ const bookSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      required: true,
+      data: Buffer,
+      contentType: String,
     },
     author: {
       type: String,
@@ -28,6 +29,13 @@ const bookSchema = new mongoose.Schema(
       maxlength: 1,
       required: true,
     },
+    ratings: [
+      {
+        type: Number,
+        min: 1,
+        max: 5,
+      },
+    ],
     postingDate: {
       type: String,
       required: true,
