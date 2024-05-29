@@ -5,10 +5,11 @@ const validateBook = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required(),
+    //image: Joi.string().required(),
     author: Joi.string().required(),
     rating: Joi.number().required(),
     postingDate: Joi.string().required(),
+    owner: Joi.string().required(),
   }),
 });
 
