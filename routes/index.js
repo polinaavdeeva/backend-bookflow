@@ -15,13 +15,12 @@ const {
   deleteBook,
   searchBooks,
 
-
   getBooksByOwner,
   getBookImage,
   uploadImage,
   getBookById,
-
 } = require("../controllers/book");
+const { getUserById } = require("../controllers/user");
 const {
   validateUserAuthentication,
   validateUserInfo,
@@ -32,17 +31,17 @@ const {
   validateBook,
 } = require("../middlewares/bookValidation");
 
-
 const { getCommentsByBook } = require("../controllers/comment");
 
 router.post("/signup", createUser, validateUserInfo);
 router.post("/signin", login, validateUserAuthentication);
 router.get("/books", getBooks);
-router.get("/books/image", getBookImage)
+router.get("/books/image", getBookImage);
 router.get("/books/search", searchBooks);
 router.get("/booksbyid/:id", getBookById)
 router.get("/comments/book/:bookId", getCommentsByBook);
-router.post("/books/image", uploadImage)
+router.post("/books/image", uploadImage);
+router.get("/users/:userId", getUserById);
 
 router.use(auth);
 
