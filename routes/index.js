@@ -17,6 +17,8 @@ const {
 
 
   getBooksByOwner,
+  getBookImage,
+  uploadImage,
 
 } = require("../controllers/book");
 const {
@@ -35,6 +37,7 @@ const { getCommentsByBook } = require("../controllers/comment");
 router.post("/signup", createUser, validateUserInfo);
 router.post("/signin", login, validateUserAuthentication);
 router.get("/books", getBooks);
+router.get("/books/image", getBookImage)
 router.get("/books/search", searchBooks);
 router.get("/comments/book/:bookId", getCommentsByBook);
 
@@ -42,6 +45,7 @@ router.use(auth);
 
 router.use("/users", usersRouter);
 router.post("/books", validateBook, createBook);
+router.post("books/image", uploadImage)
 //router.use("/books", booksRouter);
 router.get("books/:ownerId", getBooksByOwner);
 router.delete("books/:bookId", validateDeleteBook, deleteBook);
