@@ -16,6 +16,25 @@ module.exports.getBooks = (req, res, next) => {
     .catch(next);
 };
 
+module.exports.getBookById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const book = await Book.findById(id);
+
+    if (!book) {
+      return res.status(404).json({ message: "Книга не найдена" });
+    }
+
+    res.status(200).json(book);
+  } catch (error) {
+    console.error("Ошибка при получении книги:", error);
+    res.status(500).json({
+      message: "Произошла ошибка при получении книги",
+    });
+  }
+};
+
 module.exports.searchBooks = (req, res, next) => {
   const { name } = req.query;
   let query = {};
