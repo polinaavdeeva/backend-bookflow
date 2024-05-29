@@ -7,7 +7,7 @@ exports.getCommentsByBook = async (req, res, next) => {
   try {
     const bookId = req.params.bookId;
 
-    const comments = await Comment.find({ book: bookId });
+    const comments = await Comment.find({ bookId: bookId });
 
     res.status(200).json({ comments });
   } catch (error) {
@@ -68,33 +68,5 @@ exports.deleteComment = async (req, res, next) => {
     res
       .status(500)
       .json({ message: "Произошла ошибка при удалении комментария" });
-  }
-};
-
-exports.updateComment = async (req, res, next) => {
-  try {
-    const commentId = req.params.id;
-    const { content } = req.body;
-
-    const comment = await Comment.findById(commentId);
-    if (!comment) {
-      return res.status(404).json({ message: "Комментарий не найден" });
-    }
-
-    if (comment.author.toString() !== req.user._id.toString()) {
-      return res
-        .status(403)
-        .json({ message: "Вы не можете изменить этот комментарий" });
-    }
-
-    comment.content = content;
-    await comment.save();
-
-    res.status(200).json({ message: "Комментарий успешно изменен", comment });
-  } catch (error) {
-    console.error("Ошибка при изменении комментария:", error);
-    res
-      .status(500)
-      .json({ message: "Произошла ошибка при изменении комментария" });
   }
 };
