@@ -177,10 +177,8 @@ exports.getUserById = async (req, res, next) => {
     res.status(200).json({ user });
   } catch (error) {
     console.error("Ошибка при получении информации о пользователе:", error);
-    res
-      .status(500)
-      .json({
-        message: "Произошла ошибка при получении информации о пользователе",
-      });
+    res.status(500).json({
+      message: "Произошла ошибка при получении информации о пользователе",
+    });
   }
 };

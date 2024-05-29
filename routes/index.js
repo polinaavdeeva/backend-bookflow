@@ -38,10 +38,10 @@ router.post("/signin", login, validateUserAuthentication);
 router.get("/books", getBooks);
 router.get("/books/image", getBookImage);
 router.get("/books/search", searchBooks);
-router.get("/booksbyid/:id", getBookById)
+router.get("/books/:id", getBookById);
 router.get("/comments/book/:bookId", getCommentsByBook);
 router.post("/books/image", uploadImage);
-router.get("/users/:userId", getUserById);
+router.get("/users/user/:userId", getBookById);
 
 router.use(auth);
 
@@ -49,9 +49,8 @@ router.use("/users", usersRouter);
 
 router.post("/books", validateBook, createBook);
 
-//router.use("/books", booksRouter);
-router.get("/books/:ownerId", getBooksByOwner);
-router.delete("/books/:bookId", validateDeleteBook, deleteBook);
+router.get("books/:ownerId", getBooksByOwner);
+router.delete("books/:bookId", validateDeleteBook, deleteBook);
 router.use("/comments", commentRouter);
 
 router.use("*", () => {
