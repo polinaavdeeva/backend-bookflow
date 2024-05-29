@@ -40,12 +40,14 @@ router.get("/books", getBooks);
 router.get("/books/image", getBookImage)
 router.get("/books/search", searchBooks);
 router.get("/comments/book/:bookId", getCommentsByBook);
+router.post("/books/image", uploadImage)
 
 router.use(auth);
 
 router.use("/users", usersRouter);
+
 router.post("/books", validateBook, createBook);
-router.post("books/image", uploadImage)
+
 //router.use("/books", booksRouter);
 router.get("books/:ownerId", getBooksByOwner);
 router.delete("books/:bookId", validateDeleteBook, deleteBook);

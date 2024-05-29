@@ -1,6 +1,7 @@
 const Book = require("../models/book");
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
+const path = require("path");
 const ForbiddenError = require("../errors/ForbiddenError");
 
 // module.exports.getBooks = (req, res, next) => {
@@ -30,8 +31,8 @@ module.exports.searchBooks = (req, res, next) => {
 
 exports.getBookImage = async (req, res) => {
   try {
-    const bookId = req.book._id;
-
+    const {bookId} = req.query;
+   
     const book = await Book.findById(bookId);
 
     if (!book || !book.image) {
@@ -58,7 +59,7 @@ exports.uploadImage = async (req, res) => {
       });
     } else {
       let image = req.files.image;
-      const bookId = req.book._id;
+      const bookId = req.body._id;
 
       image.mv(`./uploads/${bookId}-${image.name}`);
 
