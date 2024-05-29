@@ -1,6 +1,10 @@
 const router = require("express").Router();
 const usersRouter = require("./user");
+
+const commentRouter = require("./comment");
+
 const booksRouter = require("./book");
+
 const { auth } = require("../middlewares/auth");
 const NotFoundError = require("../errors/NotFoundError");
 const { createUser } = require("../controllers/signUp");
@@ -10,7 +14,10 @@ const {
   createBook,
   deleteBook,
   searchBooks,
+
+
   getBooksByOwner,
+
 } = require("../controllers/book");
 const {
   validateUserAuthentication,
@@ -22,10 +29,14 @@ const {
   validateBook,
 } = require("../middlewares/bookValidation");
 
+
+const { getCommentsByBook } = require("../controllers/comment");
+
 router.post("/signup", createUser, validateUserInfo);
 router.post("/signin", login, validateUserAuthentication);
 router.get("/books", getBooks);
 router.get("/books/search", searchBooks);
+router.get("/comments/book/:bookId", getCommentsByBook);
 
 router.use(auth);
 
@@ -34,6 +45,7 @@ router.post("/books", validateBook, createBook);
 //router.use("/books", booksRouter);
 router.get("books/:ownerId", getBooksByOwner);
 router.delete("books/:bookId", validateDeleteBook, deleteBook);
+router.use("/comments", commentRouter);
 
 router.use("*", () => {
   throw new NotFoundError("Ресурс не найден.");
