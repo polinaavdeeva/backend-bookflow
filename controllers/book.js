@@ -20,7 +20,7 @@ module.exports.searchBooks = (req, res, next) => {
   let query = {};
 
   if (name) {
-    query.name = { $regex: name, $options: 'i' };
+    query.name = { $regex: name, $options: "i" };
   }
 
   Book.find(query)
@@ -32,14 +32,18 @@ module.exports.deleteBook = (req, res, next) => {
   Book.findById(req.params.bookId)
     .then((book) => {
       if (!book) {
-        next(new NotFoundError(`Книга с указанным _id: ${req.params.bookId} не найдена.`));
+        next(
+          new NotFoundError(
+            `Книга с указанным _id: ${req.params.bookId} не найдена.`
+          )
+        );
         return;
       }
 
-    //   if (movie.owner.toString() !== req.user._id) {
-    //     next(new ForbiddenError("Можно удалять только свои добавленные фильмы."));
-    //     return;
-    //   }
+      //   if (movie.owner.toString() !== req.user._id) {
+      //     next(new ForbiddenError("Можно удалять только свои добавленные фильмы."));
+      //     return;
+      //   }
 
       Book.deleteOne(book)
         .then(() => res.status(200).send(book))
@@ -49,15 +53,7 @@ module.exports.deleteBook = (req, res, next) => {
 };
 
 module.exports.createBook = (req, res, next) => {
-  const {
-    name,
-    description,
-    image,
-    author,
-    rating,
-    postingDate,
-    // bookId,
-  } = req.body;
+  const { name, description, image, author, rating, postingDate } = req.body;
 
   const owner = req.user._id;
 
@@ -68,7 +64,7 @@ module.exports.createBook = (req, res, next) => {
     author,
     rating,
     postingDate,
-    // bookId,
+    owner,
   })
     .then((book) => res.status(200).send(book))
     .catch((err) => {
@@ -78,4 +74,19 @@ module.exports.createBook = (req, res, next) => {
       }
       next(err);
     });
+};
+
+exports.getBooksByOwner = async (req, res) => {
+  const { ownerId } = req.params;
+
+  try {
+    const books = await Book.find({ owner: ownerId });
+
+    res.status(200).json({ books });
+  } catch (error) {
+    console.error("Ошибка при получении книг пользователя:", error);
+    res
+      .status(500)
+      .json({ message: "Произошла ошибка при получении книг пользователя" });
+  }
 };
