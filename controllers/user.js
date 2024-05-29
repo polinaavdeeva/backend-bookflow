@@ -163,3 +163,24 @@ module.exports.getCurrentUser = (req, res, next) => {
       next(err);
     });
 };
+
+exports.getUserById = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "Пользователь не найден" });
+    }
+
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error("Ошибка при получении информации о пользователе:", error);
+    res
+      .status(500)
+      .json({
+        message: "Произошла ошибка при получении информации о пользователе",
+      });
+  }
+};
