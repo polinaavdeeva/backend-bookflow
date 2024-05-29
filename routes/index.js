@@ -1,6 +1,10 @@
 const router = require("express").Router();
 const usersRouter = require("./user");
+
 const commentRouter = require("./comment");
+
+const booksRouter = require("./book");
+
 const { auth } = require("../middlewares/auth");
 const NotFoundError = require("../errors/NotFoundError");
 const { createUser } = require("../controllers/signUp");
@@ -10,6 +14,10 @@ const {
   createBook,
   deleteBook,
   searchBooks,
+
+
+  getBooksByOwner,
+
 } = require("../controllers/book");
 const {
   validateUserAuthentication,
@@ -20,6 +28,7 @@ const {
   validateDeleteBook,
   validateBook,
 } = require("../middlewares/bookValidation");
+
 
 const { getCommentsByBook } = require("../controllers/comment");
 
@@ -33,6 +42,8 @@ router.use(auth);
 
 router.use("/users", usersRouter);
 router.post("/books", validateBook, createBook);
+//router.use("/books", booksRouter);
+router.get("books/:ownerId", getBooksByOwner);
 router.delete("books/:bookId", validateDeleteBook, deleteBook);
 router.use("/comments", commentRouter);
 
