@@ -20,6 +20,10 @@ const {
   uploadImage,
   getBookById,
 } = require("../controllers/book");
+const {
+  uploadAdsImage,
+  getAdsImage
+} = require("../controllers/advertisment")
 const { getUserById } = require("../controllers/user");
 const {
   validateUserAuthentication,
@@ -35,6 +39,8 @@ const { getCommentsByBook } = require("../controllers/comment");
 
 router.post("/signup", createUser, validateUserInfo);
 router.post("/signin", login, validateUserAuthentication);
+router.post("/ads", uploadAdsImage);
+router.get("/ads/:number", getAdsImage);
 router.get("/books", getBooks);
 router.get("/books/image", getBookImage);
 router.get("/books/search", searchBooks);
@@ -42,6 +48,7 @@ router.get("/booksbyid/:id", getBookById);
 router.get("/comments/book/:bookId", getCommentsByBook);
 router.post("/books/image", uploadImage);
 //router.get("/users/:userId", getUserById);
+
 
 router.use(auth);
 
