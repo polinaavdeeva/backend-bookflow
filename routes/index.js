@@ -19,6 +19,7 @@ const {
   getBookImage,
   uploadImage,
   getBookById,
+  receiveBook,
 } = require("../controllers/book");
 const {
   uploadAdsImage,
@@ -53,6 +54,7 @@ router.get("/users/:userId", getUserById);
 router.use(auth);
 
 router.use("/users", usersRouter);
+router.post("/books/receive", receiveBook);
 
 router.post("/books", validateBook, createBook);
 

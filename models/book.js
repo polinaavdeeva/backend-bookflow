@@ -40,10 +40,10 @@ const bookSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    owner: {
+    owner: [{
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-    },
+    }]
   },
   { versionKey: false }
 );

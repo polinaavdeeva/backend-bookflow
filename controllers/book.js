@@ -165,3 +165,31 @@ exports.getBooksByOwner = async (req, res) => {
       .json({ message: "Произошла ошибка при получении книг пользователя" });
   }
 };
+
+exports.receiveBook = async (req, res) => {
+  const ownerId = req.body.owner_id;
+  const getterUser = req.user._id;
+  const bookId = req.body.book_id;
+
+  const book = await Book.findById(bookId);
+
+  try {
+    const result = await Book.findByIdAndUpdate(
+      bookId,
+      { $pull: { owners: ownerId } },
+      { new: true }
+    );
+
+      if (result) {
+        console.log('Владелец успешно удален из книги:', result);
+        return result;
+      } else {
+        console.log('Книга с указанным id не найдена');
+        return null;
+      }
+    } catch (err) {
+      console.error('Ошибка при удалении владельца из книги:', err);
+      throw err;
+    }
+} 
+  
