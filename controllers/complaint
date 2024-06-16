@@ -1,0 +1,29 @@
+const Complaint = require("../models/complaints");
+
+module.exports.createComplaint = (req, res) => {
+  const { reason, text } = req.body;
+  if (!reason || !text) {
+    return res.status(400).json({ message: "Неверно введены данные" });
+  }
+  const complaint = new Complaint({ reason, text });
+  complaint
+    .save()
+    .then((result) => {
+      res.status(201).json({ message: "Жалоба отправлена", complaint: result });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: "Ошибка отправки жалобы", error: err });
+    });
+};
+
+module.exports.getComplaints = (req, res) => {
+  Complaint.find()
+    .then((complaints) => {
+      res.status(200).json(complaints);
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .json({ message: "Ошибка при получении жалоб", error: err });
+    });
+};
