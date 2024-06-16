@@ -9,7 +9,7 @@ const validateBook = celebrate({
     author: Joi.string().required(),
     rating: Joi.number().required(),
     postingDate: Joi.string().required(),
-    owner: Joi.string().required(),
+    owner: Joi.array(),
   }),
 });
 

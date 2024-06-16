@@ -65,6 +65,12 @@ const userSchema = new mongoose.Schema({
       max: 5,
     },
   ],
+  receivedBooks: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'book'
+    }
+  ]
 });
 
 userSchema.statics.findUserByCredentials = function (email, password) {
