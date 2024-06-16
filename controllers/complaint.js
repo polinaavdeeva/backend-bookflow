@@ -1,4 +1,4 @@
-const Complaint = require("../models/complaints");
+const Complaint = require("../models/complaints.js");
 
 module.exports.createComplaint = (req, res) => {
   const { reason, text } = req.body;
@@ -25,5 +25,22 @@ module.exports.getComplaints = (req, res) => {
       res
         .status(500)
         .json({ message: "Ошибка при получении жалоб", error: err });
+    });
+};
+
+module.exports.deleteComplaint = (req, res) => {
+  const { id } = req.params;
+  Complaint.findByIdAndDelete(id)
+    .then((result) => {
+      if (result) {
+        res.status(200).json({ message: "Жалоба успешно удалена" });
+      } else {
+        res.status(404).json({ message: "Жалоба не найдена" });
+      }
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .json({ message: "Ошибка при удалении жалобы", error: err });
     });
 };
