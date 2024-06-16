@@ -68,7 +68,7 @@ const userSchema = new mongoose.Schema({
   receivedBooks: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Book"
+      ref: 'book'
     }
   ]
 });

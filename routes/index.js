@@ -20,6 +20,7 @@ const {
   uploadImage,
   getBookById,
   receiveBook,
+  getAllReceivedBooks,
 } = require("../controllers/book");
 const {
   uploadAdsImage,
@@ -48,13 +49,14 @@ router.get("/books/search", searchBooks);
 router.get("/booksbyid/:id", getBookById);
 router.get("/comments/book/:bookId", getCommentsByBook);
 router.post("/books/image", uploadImage);
-router.get("superusers/:userId", getUserById);
+router.get("/superusers/:userId", getUserById);
 
 
 router.use(auth);
 
 router.use("/users", usersRouter);
 router.post("/books/receive", receiveBook);
+router.get("/books/receivedMy", getAllReceivedBooks)
 
 router.post("/books", validateBook, createBook);
 
