@@ -1,4 +1,5 @@
 const Book = require("../models/book");
+const User = require("../models/user")
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
 const path = require("path");
@@ -182,7 +183,6 @@ exports.receiveBook = async (req, res) => {
 
       if (result) {
         console.log('Владелец успешно удален из книги:', result);
-        return result;
       } else {
         console.log('Книга с указанным id не найдена');
         return null;
@@ -191,5 +191,19 @@ exports.receiveBook = async (req, res) => {
       console.error('Ошибка при удалении владельца из книги:', err);
       throw err;
     }
+
+  const res2 = await User.findByIdAndUpdate(
+    getterUser,
+    { $push: { receivedBooks: bookId}}, 
+    { new: true }
+  ); 
+
+  if (res2) {
+    console.log('Добавлено в список мои книги', res2);
+  } else {
+    console.log('Книга с указанным id не найдена');
+    return null;
+  }
+
 } 
   
