@@ -4,6 +4,7 @@ const usersRouter = require("./user");
 const commentRouter = require("./comment");
 
 const booksRouter = require("./book");
+const complaintRouter = require("./complaints");
 
 const { auth } = require("../middlewares/auth");
 const NotFoundError = require("../errors/NotFoundError");
@@ -22,10 +23,7 @@ const {
   receiveBook,
   getAllReceivedBooks,
 } = require("../controllers/book");
-const {
-  uploadAdsImage,
-  getAdsImage
-} = require("../controllers/advertisment")
+const { uploadAdsImage, getAdsImage } = require("../controllers/advertisment");
 const { getUserById } = require("../controllers/user");
 const {
   validateUserAuthentication,
@@ -51,7 +49,6 @@ router.get("/comments/book/:bookId", getCommentsByBook);
 router.post("/books/image", uploadImage);
 router.get("/superusers/:userId", getUserById);
 
-
 router.use(auth);
 
 router.use("/users", usersRouter);
@@ -63,6 +60,7 @@ router.post("/books", validateBook, createBook);
 router.get("/books/:ownerId", getBooksByOwner);
 router.delete("/books/:bookId", validateDeleteBook, deleteBook);
 router.use("/comments", commentRouter);
+router.use("/complaints", complaintRouter);
 
 router.use("*", () => {
   throw new NotFoundError("Ресурс не найден.");
