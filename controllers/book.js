@@ -1,4 +1,5 @@
 const Book = require("../models/book");
+const User = require("../models/user")
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
 const path = require("path");
@@ -165,3 +166,58 @@ exports.getBooksByOwner = async (req, res) => {
       .json({ message: "Произошла ошибка при получении книг пользователя" });
   }
 };
+
+exports.getAllReceivedBooks = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = await User.findById(userId).populate('receivedBooks');
+
+    if (!user) {
+      return res.status(404).send({ error: 'User not found' });
+    }
+    res.status(200).json(user.receivedBooks);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+exports.receiveBook = async (req, res) => {
+  const ownerId = req.body.ownerId;
+  const getterUser = req.user._id;
+  const bookId = req.body.bookId;
+
+  const book = await Book.findById(bookId);
+
+  try {
+    const result = await Book.findByIdAndUpdate(
+      bookId,
+      { $pull: { owner: ownerId } },
+      { new: true }
+    );
+
+      if (result) {
+        console.log('Владелец успешно удален из книги:', result);
+        const res2 = await User.findByIdAndUpdate(
+          getterUser,
+          { $push: { receivedBooks: bookId}}, 
+          { new: true }
+        ); 
+      
+        if (res2) {
+          console.log('Добавлено в список мои книги', res2);
+          return res2
+        } else {
+          console.log('Книга с указанным id не найдена');
+          return null;
+        }
+
+      } else {
+        console.log('Книга с указанным id не найдена');
+        return null;
+      }
+    } catch (err) {
+      console.error('Ошибка при удалении владельца из книги:', err);
+      throw err;
+    }
+} 
+  
