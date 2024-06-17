@@ -45,7 +45,7 @@ router.get("/books/search", searchBooks);
 router.get("/booksbyid/:id", getBookById);
 router.get("/comments/book/:bookId", getCommentsByBook);
 router.post("/books/image", uploadImage);
-router.get("/users/:userId", getUserById);
+router.get("/superusers/:userId", getUserById);
 
 router.use(auth);
 

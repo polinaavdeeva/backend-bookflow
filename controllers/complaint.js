@@ -1,11 +1,11 @@
 const Complaint = require("../models/complaints.js");
 
 module.exports.createComplaint = (req, res) => {
-  const { reason, text } = req.body;
+  const { reason, text, userId, bookId } = req.body;
   if (!reason || !text) {
     return res.status(400).json({ message: "Неверно введены данные" });
   }
-  const complaint = new Complaint({ reason, text });
+  const complaint = new Complaint({ reason, text, userId, bookId });
   complaint
     .save()
     .then((result) => {
@@ -43,4 +43,16 @@ module.exports.deleteComplaint = (req, res) => {
         .status(500)
         .json({ message: "Ошибка при удалении жалобы", error: err });
     });
+};
+
+exports.getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("name surname");
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
