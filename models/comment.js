@@ -16,6 +16,17 @@ const commentSchema = new mongoose.Schema({
     ref: "Book",
     required: true,
   },
+  rating: {
+    type: Number,
+    default: 0,
+  },
+  ratings: [
+    {
+      type: Number,
+      min: 1,
+      max: 5,
+    },
+  ],
 });
 
 module.exports = mongoose.model("comment", commentSchema);
