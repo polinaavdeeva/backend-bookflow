@@ -59,7 +59,7 @@ exports.addComment = async (req, res, next) => {
 
 exports.deleteComment = async (req, res, next) => {
   try {
-    const commentId = req.params.id;
+    const commentId = req.params.commentId;
 
     const comment = await Comment.findById(commentId);
     if (!comment) {
