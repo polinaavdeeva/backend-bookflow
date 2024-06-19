@@ -13,6 +13,7 @@ const { login } = require("../controllers/signIn");
 const {
   getBooks,
   createBook,
+  createExistingBook,
   deleteBook,
   searchBooks,
 
@@ -56,6 +57,7 @@ router.post("/books/receive", receiveBook);
 router.get("/books/receivedMy", getAllReceivedBooks)
 
 router.post("/books", validateBook, createBook);
+router.post("/existingBooks", createExistingBook);
 
 router.get("/books/:ownerId", getBooksByOwner);
 router.delete("/books/:bookId", validateDeleteBook, deleteBook);

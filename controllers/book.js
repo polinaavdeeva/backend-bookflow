@@ -152,6 +152,24 @@ module.exports.createBook = (req, res, next) => {
     });
 };
 
+module.exports.createExistingBook = async (req, res, next) => {
+  const bookId = req.body.book_id;
+  const owner = req.user._id;
+  
+  try {
+    await Book.findByIdAndUpdate(
+      bookId,
+      { $push: { owner: owner } },
+      { new: true }
+    );
+    res.status(200).json({ message: "Добавлено в существующий раздел" })
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Произошла ошибка при добавлении нового владельца" });
+  }
+};
+
 exports.getBooksByOwner = async (req, res) => {
   const { ownerId } = req.params;
 
@@ -205,6 +223,7 @@ exports.receiveBook = async (req, res) => {
       
         if (res2) {
           console.log('Добавлено в список мои книги', res2);
+          res.status(200).json('Добавлено в список мои книги');
           return res2
         } else {
           console.log('Книга с указанным id не найдена');
