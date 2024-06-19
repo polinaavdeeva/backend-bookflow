@@ -10,6 +10,7 @@ const {
   getAvatar,
   addRating,
   getAverageRating,
+  deleteUser,
 } = require("../controllers/user");
 const { validateUserUpdate } = require("../middlewares/userValidation");
 
@@ -19,5 +20,6 @@ router.post("/me/avatar", uploadAvatar);
 router.get("/me/avatar", getAvatar);
 router.post("/:userId/rating", addRating);
 router.get("/:userId/rating", getAverageRating);
+router.delete("/:id", deleteUser);
 
 module.exports = router;
