@@ -1,11 +1,11 @@
 const Complaint = require("../models/complaints.js");
 
 module.exports.createComplaint = (req, res) => {
-  const { reason, text, userId, bookId } = req.body;
+  const { reason, text, userId, bookId, id } = req.body;
   if (!reason || !text) {
     return res.status(400).json({ message: "Неверно введены данные" });
   }
-  const complaint = new Complaint({ reason, text, userId, bookId });
+  const complaint = new Complaint({ reason, text, userId, bookId, id });
   complaint
     .save()
     .then((result) => {

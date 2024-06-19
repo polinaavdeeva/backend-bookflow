@@ -38,7 +38,6 @@ const userSchema = new mongoose.Schema({
   },
   registrationDate: {
     type: Date,
-    required: true,
   },
   gender: {
     type: String,
@@ -68,9 +67,9 @@ const userSchema = new mongoose.Schema({
   receivedBooks: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'book'
-    }
-  ]
+      ref: "book",
+    },
+  ],
 });
 
 userSchema.statics.findUserByCredentials = function (email, password) {
