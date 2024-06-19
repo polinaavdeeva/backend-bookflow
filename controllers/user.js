@@ -45,8 +45,7 @@ module.exports.updateUserInfo = (req, res, next) => {
 
 exports.getAvatar = async (req, res) => {
   try {
-    const userId = req.user._id;
-
+    const userId = req.params.userId;
     const user = await User.findById(userId);
 
     if (!user || !user.avatar) {

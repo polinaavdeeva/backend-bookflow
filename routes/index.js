@@ -25,7 +25,7 @@ const {
   getAllReceivedBooks,
 } = require("../controllers/book");
 const { uploadAdsImage, getAdsImage } = require("../controllers/advertisment");
-const { getUserById } = require("../controllers/user");
+const { getUserById, getAvatar } = require("../controllers/user");
 const {
   validateUserAuthentication,
   validateUserInfo,
@@ -49,6 +49,7 @@ router.get("/booksbyid/:id", getBookById);
 router.get("/comments/book/:bookId", getCommentsByBook);
 router.post("/books/image", uploadImage);
 router.get("/superusers/:userId", getUserById);
+router.get("/usersavatar/:userId", getAvatar);
 
 router.use(auth);
 
