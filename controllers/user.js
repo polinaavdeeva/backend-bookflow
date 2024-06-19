@@ -1,4 +1,6 @@
 const User = require("../models/user");
+const Comment = require("../models/comment");
+const Complaint = require("../models/complaints");
 const path = require("path");
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
@@ -45,8 +47,7 @@ module.exports.updateUserInfo = (req, res, next) => {
 
 exports.getAvatar = async (req, res) => {
   try {
-    const userId = req.user._id;
-
+    const userId = req.params.userId;
     const user = await User.findById(userId);
 
     if (!user || !user.avatar) {
@@ -180,5 +181,27 @@ exports.getUserById = async (req, res, next) => {
     res.status(500).json({
       message: "Произошла ошибка при получении информации о пользователе",
     });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Пользователь не найден" });
+    }
+
+    await User.findByIdAndDelete(userId);
+    await Complaint.deleteMany({ user: userId });
+    await Comment.deleteMany({ author: userId });
+
+    res.status(200).json({ message: "Пользователь успешно удален" });
+  } catch (error) {
+    console.error("Ошибка при удалении пользователя:", error);
+    res
+      .status(500)
+      .json({ message: "Произошла ошибка при удалении пользователя" });
   }
 };

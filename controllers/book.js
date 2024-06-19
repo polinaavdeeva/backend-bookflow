@@ -1,4 +1,5 @@
 const Book = require("../models/book");
+const User = require("../models/user");
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
 const path = require("path");
@@ -50,8 +51,8 @@ module.exports.searchBooks = (req, res, next) => {
 
 exports.getBookImage = async (req, res) => {
   try {
-    const {bookId} = req.query;
-   
+    const { bookId } = req.query;
+
     const book = await Book.findById(bookId);
 
     if (!book || !book.image) {
@@ -116,11 +117,6 @@ module.exports.deleteBook = (req, res, next) => {
         return;
       }
 
-      //   if (movie.owner.toString() !== req.user._id) {
-      //     next(new ForbiddenError("Можно удалять только свои добавленные фильмы."));
-      //     return;
-      //   }
-
       Book.deleteOne(book)
         .then(() => res.status(200).send(book))
         .catch(next);
@@ -151,6 +147,24 @@ module.exports.createBook = (req, res, next) => {
     });
 };
 
+module.exports.createExistingBook = async (req, res, next) => {
+  const bookId = req.body.book_id;
+  const owner = req.user._id;
+
+  try {
+    await Book.findByIdAndUpdate(
+      bookId,
+      { $push: { owner: owner } },
+      { new: true }
+    );
+    res.status(200).json({ message: "Добавлено в существующий раздел" });
+  } catch {
+    res
+      .status(500)
+      .json({ message: "Произошла ошибка при добавлении нового владельца" });
+  }
+};
+
 exports.getBooksByOwner = async (req, res) => {
   const { ownerId } = req.params;
 
@@ -163,5 +177,59 @@ exports.getBooksByOwner = async (req, res) => {
     res
       .status(500)
       .json({ message: "Произошла ошибка при получении книг пользователя" });
+  }
+};
+
+exports.getAllReceivedBooks = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = await User.findById(userId).populate("receivedBooks");
+
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+    res.status(200).json(user.receivedBooks);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.receiveBook = async (req, res) => {
+  const ownerId = req.body.ownerId;
+  const getterUser = req.user._id;
+  const bookId = req.body.bookId;
+
+  const book = await Book.findById(bookId);
+
+  try {
+    const result = await Book.findByIdAndUpdate(
+      bookId,
+      { $pull: { owner: ownerId } },
+      { new: true }
+    );
+
+    if (result) {
+      console.log("Владелец успешно удален из книги:", result);
+      const res2 = await User.findByIdAndUpdate(
+        getterUser,
+        { $push: { receivedBooks: bookId } },
+        { new: true }
+      );
+
+      if (res2) {
+        console.log("Добавлено в список мои книги", res2);
+        res.status(200).json("Добавлено в список мои книги");
+        return res2;
+      } else {
+        console.log("Книга с указанным id не найдена");
+        return null;
+      }
+    } else {
+      console.log("Книга с указанным id не найдена");
+      return null;
+    }
+  } catch (err) {
+    console.error("Ошибка при удалении владельца из книги:", err);
+    throw err;
   }
 };

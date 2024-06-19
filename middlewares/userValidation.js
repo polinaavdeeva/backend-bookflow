@@ -10,7 +10,7 @@ const validateUserInfo = celebrate({
     dateOfBirth: Joi.string().required(),
     gender: Joi.string().required(),
     password: Joi.string().required().min(6),
-    registrationDate: Joi.date().required(),
+    registrationDate: Joi.date(),
   }),
 });
 
