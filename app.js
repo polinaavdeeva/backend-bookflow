@@ -28,7 +28,17 @@ mongoose
     console.log("Что-то пошло не так");
   });
 
-app.use(cors());
+const corsOptions = {
+  origin: [
+    "http://localhost:3000",
+    "https://bookflow-api.vercel.app",
+    "http://bookflow-api.vercel.app",
+  ],
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use(
   fileUpload({
