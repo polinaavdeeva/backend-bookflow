@@ -9,6 +9,7 @@ const { handleError } = require("./middlewares/errorsHandler");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 const path = require("path");
 const fileUpload = require("express-fileupload");
+const { swaggerUi, swaggerSpec } = require("./swagger");
 
 const { PORT = 4000 } = process.env;
 
@@ -47,6 +48,7 @@ app.use(
 );
 
 app.use(requestLogger);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(router);
 app.use(errorLogger);
 app.use(errors());
