@@ -4,6 +4,7 @@ const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
 const path = require("path");
 const ForbiddenError = require("../errors/ForbiddenError");
+const cloudinary = require('../utils/cloudinary');
 
 // module.exports.getBooks = (req, res, next) => {
 //   Book.find({ owner: req.user._id })
@@ -72,36 +73,40 @@ exports.getBookImage = async (req, res) => {
 
 exports.uploadImage = async (req, res) => {
   try {
-    if (!req.files) {
-      res.send({
+    if (!req.files || !req.files.image) {
+      return res.status(400).send({
         status: false,
         message: "Файл не загружен",
       });
-    } else {
-      let image = req.files.image;
-      const bookId = req.body._id;
-
-      image.mv(`./uploads/${bookId}-${image.name}`);
-
-      const book = await Book.findByIdAndUpdate(
-        bookId,
-        { image: `${bookId}-${image.name}` },
-        { new: true }
-      );
-
-      res.send({
-        status: true,
-        message: "Файл загружен",
-        data: {
-          book: book.image,
-          name: bookId,
-          mimetype: image.mimetype,
-          size: image.size,
-        },
-      });
     }
+
+    let image = req.files.image;
+    const bookId = req.body._id;
+
+    // Загрузка файла в Cloudinary
+    const result = await cloudinary.uploader.upload(image.tempFilePath, {
+      folder: "books",
+    });
+
+    // Обновление информации о книге
+    const book = await Book.findByIdAndUpdate(
+      bookId,
+      { image: result.secure_url },  // Сохранение URL изображения из Cloudinary
+      { new: true }
+    );
+
+    return res.send({
+      status: true,
+      message: "Файл загружен",
+      data: {
+        book: book.image,
+        name: bookId,
+        mimetype: image.mimetype,
+        size: image.size,
+      },
+    });
   } catch (err) {
-    res.status(500).send(err);
+    return res.status(500).send(err);
   }
 };
 
