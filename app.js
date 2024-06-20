@@ -34,6 +34,8 @@ const corsOptions = {
     "http://localhost:3000",
     "https://bookflow-api.vercel.app",
     "http://bookflow-api.vercel.app",
+    "https://bookflow-client.vercel.app",
+    "http://bookflow-client.vercel.app",
   ],
   optionsSuccessStatus: 200,
   credentials: true,
