@@ -2,6 +2,7 @@ const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
 const path = require('path');
 const fs = require('fs');
+const cloudinary = require('../utils/cloudinary');
 
 // Установите папку загрузок для изображений
 const uploadPath = path.join(__dirname, '../uploads/advertisements');
@@ -16,9 +17,13 @@ exports.uploadAdsImage = async (req, res) => {
       } else {
         let image = req.files.image;
         let number = req.body.number
-        const fileExtension = image.name.split('.').pop();
-        
-        image.mv(`./uploads/advertisements/${number}.${fileExtension}`);
+
+        // Загрузка файла в Cloudinary
+        const result = await cloudinary.uploader.upload(image.tempFilePath, {
+          folder: "ads",
+          public_id: `${number}`,
+          format: 'png'
+         });
   
         res.send({
           status: true,
