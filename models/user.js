@@ -38,6 +38,7 @@ const userSchema = new mongoose.Schema({
   },
   registrationDate: {
     type: Date,
+    default: Date.now,
   },
   gender: {
     type: String,
