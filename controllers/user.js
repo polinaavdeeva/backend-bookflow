@@ -5,6 +5,7 @@ const path = require("path");
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
 const { ConflictError } = require("../errors/ConflictError");
+const cloudinary = require('../utils/cloudinary');
 
 module.exports.updateUserInfo = (req, res, next) => {
   const { email, name, dateOfBirth, gender, lastName, patronymic, rating } =
@@ -67,24 +68,28 @@ exports.getAvatar = async (req, res) => {
 
 exports.uploadAvatar = async (req, res) => {
   try {
-    if (!req.files) {
-      res.send({
+    if (!req.files.avatar || !req.files.avatar) {
+      return res.status(400).send({
         status: false,
         message: "Файл не загружен",
       });
-    } else {
-      let avatar = req.files.avatar;
+    }
+      let image = req.files.avatar;
       const userId = req.user._id;
-
-      avatar.mv(`./uploads/${userId}-${avatar.name}`);
+  
+      // Загрузка файла в Cloudinary
+      const result = await cloudinary.uploader.upload(image.tempFilePath, {
+        folder: "avatars",
+      });
+      // avatar.mv(`./uploads/${userId}-${avatar.name}`);
 
       const user = await User.findByIdAndUpdate(
         userId,
-        { avatar: `${userId}-${avatar.name}` },
+        { avatar: result.secure_url },
         { new: true }
       );
 
-      res.send({
+      return res.status(200).send({
         status: true,
         message: "Файл загружен",
         data: {
@@ -94,7 +99,7 @@ exports.uploadAvatar = async (req, res) => {
           size: avatar.size,
         },
       });
-    }
+    
   } catch (err) {
     res.status(500).send(err);
   }

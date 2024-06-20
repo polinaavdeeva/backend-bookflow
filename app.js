@@ -45,7 +45,8 @@ app.use(cors(corsOptions));
 
 app.use(
   fileUpload({
-    createParentPath: true,
+    useTempFiles: true,
+    tempFileDir: '/tmp/'
   })
 );
 
